@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block container %}
+{% if requests %}
+<div class="col-lg">
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Requester</th>
+                        <th scope="col">Blood Required</th>
+                        <th scope="col">Deadline</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for request in requests %}
+                    <tr>
+                        <td>{{request.requester.username}}</td>
+                        <td>{{request.required_blood_group}}</td>
+                        <td>{{request.deadline}}</td>
+                        <td><a class="btn btn-info" href="{% url 'request-update' request.id %}"
+                               role="button">Update</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'request-delete' request.id %}"
+                               role="button">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<p>No requests data is present for user <em>{{ user.username }}</em>!</p>
+{% endif %}
+{% if is_paginated %}
+{% include "pagination.html" %}
+{% endif %}
+
+{% endblock %}

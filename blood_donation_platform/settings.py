@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blood_donation_app'
+    'crispy_forms',
+    'blood_donation_app.apps.BloodDonationAppConfig',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'blood_donation_app.User'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -124,3 +128,4 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
