@@ -4,7 +4,7 @@ from blood_donation_app.views import HomeView, SignUpView, UserProfileView, AllR
     RequestCreateView, RequestDetailView, RequestUpdateView, RequestDeleteView, NotificationsView
 
 urlpatterns = [
-    path('home/', HomeView.as_view(), name='home'),
+    path('', HomeView.as_view(), name='home'),
     path("signup/", SignUpView.as_view(), name="signup"),
     path('accounts/profile/', UserProfileView.as_view(), name='profile'),
     path('request/', AllRequestListView.as_view(), name='all-request-list'),
