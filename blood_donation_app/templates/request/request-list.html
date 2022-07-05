@@ -20,7 +20,7 @@
                     <tbody>
                     {% for request in requests %}
                     <tr>
-                        <td>{{request.requester.username}}</td>
+                        <td><a href="{% url 'request-detail' request.id %}">{{request.requester.username}}</a></td>
                         <td>{{request.required_blood_group}}</td>
                         <td>{{request.deadline}}</td>
                         <td><a class="btn btn-info" href="{% url 'request-update' request.id %}"

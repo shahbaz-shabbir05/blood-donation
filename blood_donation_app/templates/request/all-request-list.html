@@ -17,7 +17,7 @@
                     <tbody>
                     {% for request in requests %}
                     <tr>
-                        <td>{{request.requester.username}}</td>
+                        <td><a href="{% url 'request-detail' request.id %}">{{request.requester.username}}</a></td>
                         <td>{{request.required_blood_group}}</td>
                         <td>{{request.created}}</td>
                         <td>{{request.deadline}}</td>

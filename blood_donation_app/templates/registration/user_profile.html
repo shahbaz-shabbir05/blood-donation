@@ -69,8 +69,7 @@
                 <p class="mb-4"><span class="text-primary font-italic me-1">Notifications</span></p>
                 {% for notification in notifications %}
                 <p class="text-muted mb-0"><b>{{notification.requester.username}}</b> required <b>{{notification.required_blood_group}}</b>
-                    blood group till date
-                    <b>{{notification.deadline}}</b></p>
+                    blood group till date <b>{{notification.deadline}}</b></p>
                 {% endfor %}
             </div>
         </div>
