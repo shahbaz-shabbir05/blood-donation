@@ -36,15 +36,14 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'all-request-list' %}">All Requests</a>
                 </li>
-                {% endif %}
-                {% if user.is_authenticated %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'request-list' %}">My Requests</a>
                 </li>
-                {% endif %}
-                {% if user.is_authenticated %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'notifications' %}">Notifications</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'user-disease-list' %}">Diseases</a>
                 </li>
                 {% endif %}
             </ul>

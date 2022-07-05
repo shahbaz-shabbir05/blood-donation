@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+<div class="col-lg">
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Disease Name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for d in diseases %}
+                    <tr>
+                        <td><a href="{% url 'user-disease-detail' d.id %}">{{d.disease.name}}</a></td>
+                        <td>{{d.start_date}}</td>
+                        <td>{{d.end_date}}</td>
+                        <td><a class="btn btn-info" href="{% url 'user-disease-update' d.id %}"
+                               role="button">Update</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'user-disease-delete' d.id %}"
+                               role="button">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if is_paginated %}
+{% include "pagination.html" %}
+{% endif %}
+
+{% endblock %}

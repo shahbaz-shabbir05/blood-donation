@@ -8,7 +8,7 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from blood_donation_app.forms import UserForm
-from blood_donation_app.models import Request
+from blood_donation_app.models import Request, Disease, UserDisease
 
 
 @method_decorator(login_required, name='dispatch')
@@ -127,3 +127,64 @@ class NotificationsView(ListView):
         queryset = queryset.filter(
             Q(required_blood_group=self.request.user.blood_group) & ~Q(requester__username=self.request.user.username))
         return queryset
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDiseaseListView(ListView):
+    model = UserDisease
+    template_name = 'user_disease/user-disease-list.html'
+    context_object_name = 'diseases'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(UserDiseaseListView, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDiseaseListView, self).get_context_data(**kwargs)
+        requests = self.get_queryset()
+        page = self.request.GET.get('page')
+        paginator = Paginator(requests, self.paginate_by)
+        try:
+            requests = paginator.page(page)
+        except PageNotAnInteger:
+            requests = paginator.page(1)
+        except EmptyPage:
+            requests = paginator.page(paginator.num_pages)
+        context['requests'] = requests
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDiseaseCreateView(CreateView):
+    model = UserDisease
+    template_name = 'user_disease/user-disease-create.html'
+    fields = ('disease', 'start_date', 'end_date')
+    success_url = reverse_lazy('user-disease-list')
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDiseaseDetailView(DetailView):
+    model = UserDisease
+    template_name = 'user_disease/user-disease-detail.html'
+    context_object_name = 'disease'
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDiseaseUpdateView(UpdateView):
+    model = UserDisease
+    template_name = 'user_disease/user-disease-update.html'
+    context_object_name = 'disease'
+    fields = ('disease', 'start_date', 'end_date')
+
+    def get_success_url(self):
+        return reverse_lazy('user-disease-detail', kwargs={'pk': self.object.id})
+
+
+@method_decorator(login_required, name='dispatch')
+class UserDiseaseDeleteView(DeleteView):
+    model = UserDisease
+    template_name = 'user_disease/user-disease-delete.html'
+    success_url = reverse_lazy('user-disease-list')
+

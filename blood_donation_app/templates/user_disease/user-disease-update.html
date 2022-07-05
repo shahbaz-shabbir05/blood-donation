@@ -1,17 +1,14 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-
 {% block container %}
 <div class="card">
     <div class="card-header">
-        <h5 class="card-title">Create a New Request for Blood</h5>
+        <h5 class="card-title">User Disease Update #{{disease.id}}</h5>
     </div>
     <div class="card-body">
         <form method="post">
             {% csrf_token %}
-            {{ form|crispy }}
-            <br>
-            <button class="btn btn-success" type="submit">Create</button>
+            {{form.as_p}}
+            <button class="btn btn-success" type="submit">Update</button>
         </form>
     </div>
 </div>

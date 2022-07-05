@@ -1,7 +1,8 @@
 from django.urls import path
 
 from blood_donation_app.views import HomeView, SignUpView, UserProfileView, AllRequestListView, RequestListView, \
-    RequestCreateView, RequestDetailView, RequestUpdateView, RequestDeleteView, NotificationsView
+    RequestCreateView, RequestDetailView, RequestUpdateView, RequestDeleteView, NotificationsView, UserDiseaseListView, \
+    UserDiseaseCreateView, UserDiseaseDetailView, UserDiseaseUpdateView, UserDiseaseDeleteView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -14,4 +15,9 @@ urlpatterns = [
     path('request/<int:pk>/update/', RequestUpdateView.as_view(), name='request-update'),
     path('request/<int:pk>/delete/', RequestDeleteView.as_view(), name='request-delete'),
     path('notifications/', NotificationsView.as_view(), name='notifications'),
+    path('user/disease/list/', UserDiseaseListView.as_view(), name='user-disease-list'),
+    path('user/disease/create/', UserDiseaseCreateView.as_view(), name='user-disease-create'),
+    path('user/disease/<int:pk>/', UserDiseaseDetailView.as_view(), name='user-disease-detail'),
+    path('user/disease/<int:pk>/update/', UserDiseaseUpdateView.as_view(), name='user-disease-update'),
+    path('user/disease/<int:pk>/delete/', UserDiseaseDeleteView.as_view(), name='user-disease-delete'),
 ]
