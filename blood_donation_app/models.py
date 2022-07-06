@@ -41,7 +41,7 @@ class Request(models.Model):
         return str(self.pk)
 
     def get_absolute_url(self):
-        return reverse('detail-request', args=[self.pk])
+        return reverse('request-detail', args=[self.pk])
 
 
 class Disease(models.Model):

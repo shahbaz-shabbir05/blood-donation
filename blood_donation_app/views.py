@@ -8,7 +8,7 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from blood_donation_app.forms import UserForm
-from blood_donation_app.models import Request, Disease, UserDisease
+from blood_donation_app.models import Request, UserDisease
 
 
 @method_decorator(login_required, name='dispatch')
@@ -28,7 +28,7 @@ class UserProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
-        context['notifications'] = Request.objects.filter(
+        context['notifications'] = Request.objects.select_related('requester').filter(
             Q(required_blood_group=self.request.user.blood_group) & ~Q(requester__username=self.request.user.username))
         return context
 
@@ -39,6 +39,11 @@ class AllRequestListView(ListView):
     template_name = 'request/all-request-list.html'
     context_object_name = 'requests'
     paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(AllRequestListView, self).get_queryset()
+        queryset = queryset.select_related('requester').all()
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AllRequestListView, self).get_context_data(**kwargs)
@@ -64,7 +69,7 @@ class RequestListView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super(RequestListView, self).get_queryset()
-        queryset = queryset.filter(requester=self.request.user)
+        queryset = queryset.select_related('requester').filter(requester=self.request.user)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -89,6 +94,10 @@ class RequestCreateView(CreateView):
     fields = ('required_blood_group', 'deadline',)
     success_url = reverse_lazy('all-request-list')
 
+    def form_valid(self, form):
+        form.instance.requester = self.request.user
+        return super(RequestCreateView, self).form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class RequestDetailView(DetailView):
@@ -103,9 +112,7 @@ class RequestUpdateView(UpdateView):
     template_name = 'request/request-update.html'
     context_object_name = 'request'
     fields = ('required_blood_group', 'deadline',)
-
-    def get_success_url(self):
-        return reverse_lazy('request-detail', kwargs={'pk': self.object.id})
+    success_url = reverse_lazy('request-list')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -124,7 +131,7 @@ class NotificationsView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super(NotificationsView, self).get_queryset()
-        queryset = queryset.filter(
+        queryset = queryset.select_related('requester').filter(
             Q(required_blood_group=self.request.user.blood_group) & ~Q(requester__username=self.request.user.username))
         return queryset
 
@@ -138,7 +145,7 @@ class UserDiseaseListView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super(UserDiseaseListView, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user)
+        queryset = queryset.select_related('user', 'disease').filter(user=self.request.user)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -163,6 +170,10 @@ class UserDiseaseCreateView(CreateView):
     fields = ('disease', 'start_date', 'end_date')
     success_url = reverse_lazy('user-disease-list')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UserDiseaseCreateView, self).form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class UserDiseaseDetailView(DetailView):
@@ -177,9 +188,7 @@ class UserDiseaseUpdateView(UpdateView):
     template_name = 'user_disease/user-disease-update.html'
     context_object_name = 'disease'
     fields = ('disease', 'start_date', 'end_date')
-
-    def get_success_url(self):
-        return reverse_lazy('user-disease-detail', kwargs={'pk': self.object.id})
+    success_url = reverse_lazy('user-disease-list')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -187,4 +196,3 @@ class UserDiseaseDeleteView(DeleteView):
     model = UserDisease
     template_name = 'user_disease/user-disease-delete.html'
     success_url = reverse_lazy('user-disease-list')
-
