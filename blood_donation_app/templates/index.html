@@ -6,5 +6,9 @@
 <p>Welcome to Blood Bank, a website developed by <em>Arbisoft</em>!</p>
 <br>
 <br>
+{% include "request/all-requests-list.html" %}
+{% if is_paginated %}
+{% include "pagination.html" %}
+{% endif %}
 
 {% endblock %}

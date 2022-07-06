@@ -7,13 +7,35 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from blood_donation_app.forms import UserForm
-from blood_donation_app.models import Request, UserDisease
+from blood_donation_app.forms import UserForm, RequestForm
+from blood_donation_app.models import Request, UserDisease, Disease
 
 
 @method_decorator(login_required, name='dispatch')
-class HomeView(TemplateView):
+class HomeView(ListView):
+    model = Request
     template_name = "index.html"
+    context_object_name = 'requests'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(HomeView, self).get_queryset()
+        queryset = queryset.select_related('requester').all()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        requests = self.get_queryset()
+        page = self.request.GET.get('page')
+        paginator = Paginator(requests, self.paginate_by)
+        try:
+            requests = paginator.page(page)
+        except PageNotAnInteger:
+            requests = paginator.page(1)
+        except EmptyPage:
+            requests = paginator.page(paginator.num_pages)
+        context['requests'] = requests
+        return context
 
 
 class SignUpView(CreateView):
@@ -30,33 +52,6 @@ class UserProfileView(TemplateView):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         context['notifications'] = Request.objects.select_related('requester').filter(
             Q(required_blood_group=self.request.user.blood_group) & ~Q(requester__username=self.request.user.username))
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
-class AllRequestListView(ListView):
-    model = Request
-    template_name = 'request/all-request-list.html'
-    context_object_name = 'requests'
-    paginate_by = 10
-
-    def get_queryset(self, *args, **kwargs):
-        queryset = super(AllRequestListView, self).get_queryset()
-        queryset = queryset.select_related('requester').all()
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(AllRequestListView, self).get_context_data(**kwargs)
-        requests = self.get_queryset()
-        page = self.request.GET.get('page')
-        paginator = Paginator(requests, self.paginate_by)
-        try:
-            requests = paginator.page(page)
-        except PageNotAnInteger:
-            requests = paginator.page(1)
-        except EmptyPage:
-            requests = paginator.page(paginator.num_pages)
-        context['requests'] = requests
         return context
 
 
@@ -91,8 +86,8 @@ class RequestListView(ListView):
 class RequestCreateView(CreateView):
     model = Request
     template_name = 'request/request-create.html'
-    fields = ('required_blood_group', 'deadline',)
-    success_url = reverse_lazy('all-request-list')
+    success_url = reverse_lazy('request-list')
+    form_class = RequestForm
 
     def form_valid(self, form):
         form.instance.requester = self.request.user
@@ -119,7 +114,7 @@ class RequestUpdateView(UpdateView):
 class RequestDeleteView(DeleteView):
     model = Request
     template_name = 'request/request-delete.html'
-    success_url = reverse_lazy('all-request-list')
+    success_url = reverse_lazy('request-list')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -196,3 +191,11 @@ class UserDiseaseDeleteView(DeleteView):
     model = UserDisease
     template_name = 'user_disease/user-disease-delete.html'
     success_url = reverse_lazy('user-disease-list')
+
+
+@method_decorator(login_required, name='dispatch')
+class DiseaseCreateView(CreateView):
+    model = Disease
+    template_name = 'user_disease/disease-create.html'
+    fields = ('name',)
+    success_url = reverse_lazy('disease-create')
