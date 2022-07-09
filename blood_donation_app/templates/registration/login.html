@@ -16,14 +16,18 @@
 <p>Please login to see this page.</p>
 {% endif %}
 {% endif %}
-
-<form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <br>
-    <button class="btn btn-success" type="submit">Login</button>
-</form>
-
+<div class="col-lg-7">
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <br>
+                <button class="btn btn-success" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 {# Assumes you setup the password_reset view in your URLconf #}
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 

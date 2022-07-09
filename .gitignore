@@ -7,3 +7,4 @@ db.sqlite3
 media
 .idea
 vcs.xml
+*.DS_Store
