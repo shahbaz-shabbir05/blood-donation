@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block container %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Request Update #{{request.id}}</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-success" type="submit">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

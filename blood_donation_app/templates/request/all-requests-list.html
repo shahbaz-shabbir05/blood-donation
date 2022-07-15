@@ -1,0 +1,30 @@
+{% if requests %}
+<h4>All Requests for Blood Donation.</h4>
+<div class="col-lg">
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Requester</th>
+                        <th scope="col">Blood Required</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Deadline</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for request in requests %}
+                    <tr>
+                        <td><a href="{% url 'request-detail' request.id %}">{{request.requester.username}}</a></td>
+                        <td>{{request.required_blood_group}}</td>
+                        <td>{{request.created}}</td>
+                        <td>{{request.deadline}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
