@@ -92,7 +92,7 @@ class RequestCreateView(LoginRequiredMixin, CreateView):
 class RequestDetailView(LoginRequiredMixin, DetailView):
     model = Request
     template_name = 'request/request-detail.html'
-    context_object_name = 'request'
+    context_object_name = 'requests'
 
 
 class RequestUpdateView(LoginRequiredMixin, UpdateView):

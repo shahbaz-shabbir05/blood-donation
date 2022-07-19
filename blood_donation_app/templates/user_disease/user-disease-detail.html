@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% block container %}
 
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">User Disease Detail #{{disease.id}}</h5>
-    </div>
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Name</dt>
-            <dd class="col-sm-9">{{ disease.disease }}</dd>
-            <dt class="col-sm-3">Start Date</dt>
-            <dd class="col-sm-9">{{ disease.start_date }}</dd>
-            <dt class="col-sm-3">End Date</dt>
-            <dd class="col-sm-9">{{ disease.end_date }}</dd>
-        </dl>
+<div class="col-lg-7">
+    <div class="card mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">User Disease Detail #{{disease.id}}</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">{{ disease.disease }}</dd>
+                    <dt class="col-sm-3">Start Date</dt>
+                    <dd class="col-sm-9">{{ disease.start_date }}</dd>
+                    <dt class="col-sm-3">End Date</dt>
+                    <dd class="col-sm-9">{{ disease.end_date }}</dd>
+                </dl>
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}
