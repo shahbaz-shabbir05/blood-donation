@@ -5,9 +5,15 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from blood_donation_app.forms import UserForm, RequestForm
-from blood_donation_app.models import Request, UserDisease, Disease
+from blood_donation_app.models import Request, UserDisease, Disease, User
+from blood_donation_app.serializers import ProfileSerializer, UserSerializer, RequestSerializer
 
 
 class HomeView(LoginRequiredMixin, ListView):
@@ -184,3 +190,41 @@ class DiseaseCreateView(LoginRequiredMixin, CreateView):
     template_name = 'user_disease/disease-create.html'
     fields = ('name',)
     success_url = reverse_lazy('disease-create')
+
+
+class ProfileAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        try:
+            user = User.objects.get(id=request.user.id)
+        except User.DoesNotExist as error:
+            return self.response.Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserDetailAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        try:
+            user = User.objects.get(id=request.user.id)
+        except User.DoesNotExist as error:
+            return self.response.Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RequestViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RequestSerializer
+    queryset = Request.objects.all()
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(RequestViewSet, self).get_queryset()
+        queryset = queryset.filter(requester=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(requester=self.request.user)
