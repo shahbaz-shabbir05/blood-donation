@@ -24,9 +24,8 @@ class TestProfileDetailAPI:
         client, user = api_client
         url = reverse('profile-detail')
         response = client.get(url)
-        data = response.json()
         assert response.status_code == 200
-        assert data['full_name'] == user.full_name
+        assert response.data['full_name'] == user.full_name
 
 
 class TestUserDetailAPI:
@@ -46,9 +45,8 @@ class TestUserDetailAPI:
         client, user = api_client
         url = reverse('user-detail')
         response = client.get(url)
-        data = response.json()
         assert response.status_code == 200
-        assert data['full_name'] == user.full_name
+        assert response.data['full_name'] == user.full_name
 
 
 class TestRequestAPI:
@@ -82,9 +80,8 @@ class TestRequestAPI:
             **{'requester': user, 'required_blood_group': 'A+', 'deadline': timezone.now()})
         url = reverse('requests-detail', kwargs={'pk': request.pk})
         response = client.get(url)
-        data = response.data
         assert response.status_code == 200
-        assert data['required_blood_group'] == request.required_blood_group
+        assert response.data['required_blood_group'] == request.required_blood_group
 
     def test_request_update(self, api_client):
         client, user = api_client
@@ -92,10 +89,9 @@ class TestRequestAPI:
             **{'requester': user, 'required_blood_group': 'A+', 'deadline': timezone.now()})
         url = reverse('requests-detail', kwargs={'pk': request_before.pk})
         response = client.patch(url, data={'required_blood_group': 'B+'})
-        data = response.data
         request_after = Request.objects.get(id=request_before.id)
         assert response.status_code == 200
-        assert data['required_blood_group'] == request_after.required_blood_group
+        assert response.data['required_blood_group'] == request_after.required_blood_group
         assert request_before.required_blood_group != request_after.required_blood_group
 
     def test_request_delete(self, api_client):
