@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from blood_donation_app.models import User, Request, Disease, UserDisease
 
-TEST_PASSWORD = 'BloodDonationTest123!'
+TEST_PASSWORD = 'Pass1234!!'
 
 
 def create_admin_user(username, email):

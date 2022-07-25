@@ -8,3 +8,4 @@ media
 .idea
 vcs.xml
 *.DS_Store
+.coverage

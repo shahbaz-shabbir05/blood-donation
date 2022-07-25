@@ -199,7 +199,7 @@ class ProfileAPIView(APIView):
         try:
             user = User.objects.get(id=request.user.id)
         except User.DoesNotExist as error:
-            return self.response.Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
+            return Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
         serializer = ProfileSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -211,7 +211,7 @@ class UserDetailAPIView(APIView):
         try:
             user = User.objects.get(id=request.user.id)
         except User.DoesNotExist as error:
-            return self.response.Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
+            return Response({'detail': error.args[0]}, status.HTTP_404_NOT_FOUND)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
