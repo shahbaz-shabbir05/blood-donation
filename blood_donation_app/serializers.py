@@ -19,15 +19,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['full_name', 'email', 'phone', 'blood_group', 'is_donor', 'diseases', 'donations', 'requests']
 
     def get_diseases(self, obj):
-        # diseases = UserDisease.objects.select_related('user', 'disease').filter(user=instance)
         return [value.disease.name for value in obj.diseases.all().distinct()]
 
     def get_donations(self, obj):
-        # donations = Request.objects.select_related('donor').filter(donor=instance)
         return obj.donations.all().values('required_blood_group', 'deadline', 'acknowledge_time')
 
     def get_requests(self, obj):
-        # requests = Request.objects.select_related('requester').filter(requester=instance)
         return obj.donations.all().values('required_blood_group', 'deadline')
 
 
