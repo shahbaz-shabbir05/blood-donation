@@ -1,8 +1,13 @@
 from django.urls import path
+from rest_framework import routers
 
 from blood_donation_app.views import HomeView, SignUpView, UserProfileView, RequestListView, RequestCreateView, \
     RequestDetailView, RequestUpdateView, RequestDeleteView, NotificationsView, UserDiseaseListView, \
-    UserDiseaseCreateView, UserDiseaseDetailView, UserDiseaseUpdateView, UserDiseaseDeleteView, DiseaseCreateView
+    UserDiseaseCreateView, UserDiseaseDetailView, UserDiseaseUpdateView, UserDiseaseDeleteView, DiseaseCreateView, \
+    ProfileAPIView, UserDetailAPIView, RequestViewSet
+
+router = routers.DefaultRouter()
+router.register(r'requests', RequestViewSet, basename='requests')
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -20,4 +25,7 @@ urlpatterns = [
     path('user/disease/<int:pk>/update/', UserDiseaseUpdateView.as_view(), name='user-disease-update'),
     path('user/disease/<int:pk>/delete/', UserDiseaseDeleteView.as_view(), name='user-disease-delete'),
     path('disease/create/', DiseaseCreateView.as_view(), name='disease-create'),
+    path('profile/', ProfileAPIView.as_view(), name='profile-detail'),
+    path('user/details/', UserDetailAPIView.as_view(), name='user-detail'),
 ]
+urlpatterns += router.urls
