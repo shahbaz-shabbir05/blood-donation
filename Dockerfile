@@ -1,15 +1,14 @@
 FROM python:3.10
 
+ENV PYTHONUNBUFFERED 1
+
 RUN mkdir /blood_donation_platform
 
 WORKDIR /blood_donation_platform
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+COPY . /blood_donation_platform
 
 RUN pip install --upgrade pip
-
-COPY . /blood_donation_platform
 
 RUN pip install -r requirements.txt
 
