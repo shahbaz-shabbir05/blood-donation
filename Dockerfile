@@ -1,20 +1,20 @@
 FROM python:3.10
 
-ENV DockerHOME=/Users/ShahbazShabbir/PycharmProjects/blood_donation_platform/
+RUN mkdir /blood_donation_platform
 
-RUN mkdir -p $DockerHOME
-
-WORKDIR $DockerHOME
+WORKDIR /blood_donation_platform
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip
 
-COPY . $DockerHOME
+COPY . /blood_donation_platform
 
 RUN pip install -r requirements.txt
 
+RUN python manage.py migrate
+
 EXPOSE 8000
 
-CMD python manage.py runserver
+CMD python manage.py runserver 0.0.0.0:8000
