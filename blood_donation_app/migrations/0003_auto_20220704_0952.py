@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='phone',
-            field=models.CharField(default=datetime.datetime(2022, 7, 4, 9, 52, 24, 808017, tzinfo=utc), max_length=30),
+            field=models.CharField(default=datetime.datetime(2022, 7, 4, 9, 52, 24, 808017, tzinfo=utc), max_length=255),
             preserve_default=False,
         ),
         migrations.AlterField(

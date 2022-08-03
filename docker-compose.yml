@@ -1,0 +1,28 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user_blood_donation
+      POSTGRES_DB: blood_donation
+      POSTGRES_PASSWORD: Pass1234!!
+    volumes:
+      - pgdata:/var/lib/posgresql/data
+
+  web:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/blood_donation_platform
+    command: python manage.py runserver 0.0.0.0:4000
+    depends_on:
+      - db
+volumes:
+  pgdata:
+
+#RUN BELOW COMMAND BEFORE RUNNING 'docker-compose up'
+#  $ docker-compose exec web python manage.py migrate --noinput

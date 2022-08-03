@@ -29,7 +29,7 @@ BLOOD_GROUPS_CHOICES = [
 class User(AbstractUser):
     is_donor = models.BooleanField(default=False)
     blood_group = models.CharField(max_length=5, choices=BLOOD_GROUPS_CHOICES, default=NOT_KNOWN)
-    phone = models.CharField(max_length=30)
+    phone = models.CharField(max_length=255)
 
     def __str__(self):
         return self.username
